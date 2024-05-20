@@ -5,10 +5,8 @@
 #include <string>
 
 class hashTable {
-  private:
 
-
-  public:
+ public:
 
   // The constructor initializes the hash table.
   // Uses getPrime to choose a prime number at least as large as
@@ -70,6 +68,7 @@ class hashTable {
 
   // The hash function.
   int hash(const std::string &key);
+  int hash2(const std::string &key);
 
   // Search for an item with the specified key.
   // Return the position if found, -1 otherwise.

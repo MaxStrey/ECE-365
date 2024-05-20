@@ -17,14 +17,18 @@ int hashTable::hash(const std::string &key) {
     for(char ch : key) {
         hashVal = 37 * hashVal + ch;
     }
-    return hashVal % capacity; // Modulo operation to fit into table size
+    int index = hashVal % capacity;
+    return index; // Modulo operation to fit into table size}
 }
 
 
 int hashTable::insert(const std::string &key, void *pv) {
-    // Step 1: Check if the table needs to be rehashed
+
+    // Step 1: Check for rehashing
     if (filled >= capacity / 2) {
+        std::cout << "Table more than half full, attempting to rehash." << std::endl;
         if (!rehash()) {
+            std::cout << "Rehashing failed." << std::endl;
             return 2; // Rehash failed
         }
     }
@@ -35,9 +39,11 @@ int hashTable::insert(const std::string &key, void *pv) {
     // Step 3: Probe for the next open slot or check for duplicate
     while (data[pos].isOccupied && !data[pos].isDeleted) {
         if (data[pos].key == key) {
+            std::cout << "Duplicate key found at position: " << pos << std::endl;
             return 1; // Duplicate key
         }
         pos = (pos + 1) % capacity; // Linear probing
+        std::cout << "Position occupied, probing next position: " << pos << std::endl;
     }
 
     // Step 4: Insert the new key
@@ -55,8 +61,11 @@ int hashTable::insert(const std::string &key, void *pv) {
 int hashTable::findPos(const std::string &key) {
     int pos = hash(key);  // Start with the hash value as the initial position
     while (data[pos].isOccupied) {  // Loop until an unoccupied slot is found
+
         if (data[pos].key == key && !data[pos].isDeleted) {
+
             return pos;  // Key found, return position
+
         }
         pos = (pos + 1) % capacity;  // Probe to the next slot
     }
@@ -65,9 +74,9 @@ int hashTable::findPos(const std::string &key) {
 
 
 bool hashTable::contains(const std::string &key) {
-    int pos = findPos(key);
-    return (pos != -1);
+    return findPos(key) != -1;
 }
+
 
 bool hashTable::rehash() {
     // Store old data
@@ -115,4 +124,45 @@ unsigned int hashTable::getPrime(int size) {
         }
     }
 }
+
+
+
+void * hashTable::getPointer(const std::string &key, bool *b ){
+    if (b == nullptr) {
+        return nullptr;
+    }
+    
+    int pos = findPos(key);
+    *b = false;
+    if (pos == -1){
+        return nullptr;
+    }
+    *b = true;
+    
+    return data[pos].pv;
+}
+
+
+
+int hashTable::setPointer(const std::string &key, void *pv) {
+    int pos = findPos(key);
+    if (pos != -1) {
+        data[pos].pv = pv;
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+bool hashTable::remove(const std::string &key) {
+    int pos = findPos(key);
+    if (pos != -1) {
+        data[pos].isDeleted = true;
+        --filled;  
+        return true;
+    } else {
+        return false;
+    }
+}
+
 

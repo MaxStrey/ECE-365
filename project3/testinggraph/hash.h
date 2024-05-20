@@ -4,12 +4,10 @@
 #include <vector>
 #include <string>
 
-class hashTable {
-  private:
+class hashTable
+{
 
-
-  public:
-
+public:
   // The constructor initializes the hash table.
   // Uses getPrime to choose a prime number at least as large as
   // the specified size for the initial size of the hash table.
@@ -21,18 +19,18 @@ class hashTable {
   // Returns 0 on success,
   // 1 if key already exists in hash table,
   // 2 if rehash fails.
-  int insert(const std::string &key, void *pv = nullptr);
+  int insert(const std::string &key, void *pv);
 
   // Check if the specified key is in the hash table.
   // If so, return true; otherwise, return false.
   bool contains(const std::string &key);
 
   // Get the pointer associated with the specified key.
-  // If the key does not exist in the hash table, return nullptr.
+  // If the key does not exist in the hash table, return NULL.
   // If an optional pointer to a bool is provided,
   // set the bool to true if the key is in the hash table,
   // and set the bool to false otherwise.
-  void *getPointer(const std::string &key, bool *b = nullptr);
+  void *getPointer(const std::string &key, bool *b = NULL);
 
   // Set the pointer associated with the specified key.
   // Returns 0 on success,
@@ -44,27 +42,25 @@ class hashTable {
   // false if the specified key is not in the hash table.
   bool remove(const std::string &key);
 
- private:
-
+private:
   // Each item in the hash table contains:
   // key - a string used as a key.
   // isOccupied - if false, this entry is empty,
   //              and the other fields are meaningless.
   // isDeleted - if true, this item has been lazily deleted.
   // pv - a pointer related to the key;
-  //      nullptr if no pointer was provided to insert.
-  class hashItem {
+  //      NULL if no pointer was provided to insert.
+  class hashItem
+  {
   public:
-    std::string key {""};
-    bool isOccupied {false};
-    bool isDeleted {false};
-    void *pv {nullptr};
-
-    hashItem() = default;
+    std::string key;
+    bool isOccupied;
+    bool isDeleted;
+    void *pv;
   };
 
   int capacity; // The current capacity of the hash table.
-  int filled; // Number of occupied items in the table.
+  int filled;   // Number of occupied items in the table.
 
   std::vector<hashItem> data; // The actual entries are here.
 
